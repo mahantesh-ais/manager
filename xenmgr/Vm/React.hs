@@ -535,7 +535,8 @@ notifyVmStateUpdate = do
         Just state -> do
 	  case state of
             "shutdown" -> liftIO $
-              do xsWrite ("/local/domain/" ++ show domid ++ "/boot-state") "1"
+                            do xsWrite ("/local/domain/" ++ show domid ++ "/boot-state") "1"
+            _          -> return ()
         Nothing -> return ()
     where
     st s =
