@@ -531,7 +531,9 @@ notifyVmStateUpdate = do
       (uuidStr uuid)
       (st maybe_state)
     whenDomainID_ uuid $ \domid -> do
-      do xsWrite ("/local/domain/" ++ show domid ++ "/boot-state") maybe_state 
+      case maybe_state of
+        Just state -> do xsWrite ("/local/domain/" ++ show domid ++ "/boot-state") maybe_state 
+        Nothing -> return () 
     where
     st s =
       case s of
