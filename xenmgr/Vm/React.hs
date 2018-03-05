@@ -533,8 +533,8 @@ notifyVmStateUpdate = do
     whenDomainID_ uuid $ \domid -> do
       boot_state <- xsRead("/state/" ++ show uuid ++ "/state")
       case boot_state of
-        Just state -> do xsWrite ("/local/domain/" ++ show domid ++ "/boot-state") state 
-        Nothing -> return () 
+        Just state -> do xsWrite ("/local/domain/" ++ show domid ++ "/boot-state") (fromString state)
+        Nothing -> return ()
     where
     st s =
       case s of
