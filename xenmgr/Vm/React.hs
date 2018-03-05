@@ -530,8 +530,9 @@ notifyVmStateUpdate = do
       xenmgrObjectPath
       (uuidStr uuid)
       (st maybe_state)
-    case maybe_state of
-      "shutdown" -> do xsWrite ("/local/domain/" ++ show domid ++ "/boot-state") "1"
+    whenDomainID_ uuid $ \domid -> do
+      case maybe_state of
+        "shutdown" -> do xsWrite ("/local/domain/" ++ show domid ++ "/boot-state") "1"
     where
     st s =
       case s of
