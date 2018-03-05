@@ -530,9 +530,10 @@ notifyVmStateUpdate = do
       xenmgrObjectPath
       (uuidStr uuid)
       (st maybe_state)
-    let boot_state = "shutdown"
     whenDomainID_ uuid $ \domid -> do
-      case maybe_state of
+      let boot_state = "shutdown"
+      vm_state <- xsRead("/state/" ++ show uuid ++ "/state")
+      case vm_state of
         boot_state -> do xsWrite ("/local/domain/" ++ show domid ++ "/boot-state") "1"
     where
     st s =
