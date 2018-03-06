@@ -524,13 +524,13 @@ reactVmAcpiUpdate = do
 -- which any state change code is handled normally.
 notifyVmStateUpdate :: Vm ()
 notifyVmStateUpdate = do
-    liftIO $ xsWrite ("/local/domain/1/boot-state") "2"
     uuid <- vmUuid
     maybe_state <- liftIO $ xsRead ("/state/" ++ show uuid ++ "/state")
     liftRpc $ notifyComCitrixXenclientXenmgrNotify
       xenmgrObjectPath
       (uuidStr uuid)
       (st maybe_state)
+    liftIO $ xsWrite ("/local/domain/1/boot-state") "2"
     whenDomainID_ uuid $ \domid -> do
       case maybe_state of
         Just state -> do
