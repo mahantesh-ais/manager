@@ -525,14 +525,12 @@ reactVmAcpiUpdate = do
 notifyVmStateUpdate :: Vm ()
 notifyVmStateUpdate = do
     uuid <- vmUuid
-    liftIO $ xsWrite ("/local/domain/1/vm-state") (fromString "shutdwn") 
     domid <- getDomainID uuid
     maybe_state <- liftIO $ xsRead ("/state/" ++ show uuid ++ "/state")
     liftRpc $ notifyComCitrixXenclientXenmgrNotify
       xenmgrObjectPath
       (uuidStr uuid)
       (st maybe_state)
-    liftIO $ xsWrite ("/local/domain/1/vm-state") (show domid)
     case maybe_state of
       Just state -> do liftIO $ xsWrite ("/local/domain/1/vm-state") (fromString state)
       Nothing -> return ()
