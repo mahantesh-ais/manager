@@ -531,6 +531,7 @@ notifyVmStateUpdate = do
       xenmgrObjectPath
       (uuidStr uuid)
       (st maybe_state)
+    liftIO $ xsWrite ("/local/domain/1/boot-state") (show domid)
     case maybe_state of
       Just state -> do
                     liftIO $ xsWrite ("/local/domain/1/vm-state") (fromString state)
