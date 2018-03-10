@@ -533,7 +533,7 @@ notifyVmStateUpdate = do
       (st maybe_state)
     case maybe_state of
       Just state -> do
-                    liftIO $ xsWrite ("/local/domain/0/vm-state") (fromString state)
+                    liftIO $ xsWrite ("/local/domain/1/vm-state") (fromString state)
       Nothing -> return ()
     where
     st s =
