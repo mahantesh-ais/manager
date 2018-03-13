@@ -531,7 +531,7 @@ notifyVmStateUpdate = do
       (uuidStr uuid)
       (st maybe_state)
     case maybe_state of
-      Just state -> do liftIO $ xsWrite ("/local/domain/" ++ show uuid ++ "/vm-state") (fromString state)
+      Just state -> do liftIO $ xsWrite ("/state/" ++ show uuid ++ "/xenmgr-state") (fromString state)
       Nothing -> return ()
     where
     st s =
