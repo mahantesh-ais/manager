@@ -253,7 +253,7 @@ vmEventProcessor
                `mappend` clockR
                `mappend` bookkeepShutdownReasonR set_shut_r
                `mappend` measuresR xm
-               `mappend` notifyNetworkDaemonR
+--               `mappend` notifyNetworkDaemonR
                `mappend` lifecycleR xm get_shut_r
                `mappend` updateInternalStateR
                `mappend` powerlinkR xm get_shut_r
