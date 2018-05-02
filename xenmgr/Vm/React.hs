@@ -62,7 +62,7 @@ import XenMgr.XM
 import XenMgr.CdLock
 
 import qualified XenMgr.Connect.Xl as Xl
-import Rpc.Autogen.NetworkDaemonClient
+--import Rpc.Autogen.NetworkDaemonClient
 import Rpc.Autogen.CtxusbDaemonClient
 
 usbdaemonService = "com.citrix.xenclient.usbdaemon"
@@ -221,6 +221,7 @@ logStatesR = mkReact f where
   f _ = return ()
 
 -- notifications sent to network daemon on networking backend domains start/stop
+{-
 notifyNetworkDaemonR = mkReact f where
   f (VmStateChange Running)
     = do uuid <- vmUuid
@@ -232,7 +233,7 @@ notifyNetworkDaemonR = mkReact f where
          whenM (getVmProvidesNetworkBackend uuid) $ liftRpc $
              comCitrixXenclientNetworkdaemonNdvmStatus "com.citrix.xenclient.networkdaemon" "/" (uuidStr uuid) (-1) eNDVM_STATUS_STOPPED
   f _ = return ()
-
+-}
 uuidRpc :: (Uuid -> Rpc a) -> Vm a
 uuidRpc f = vmUuid >>= \uuid -> liftRpc (f uuid)
 
@@ -253,7 +254,7 @@ vmEventProcessor monitor
                `mappend` clockR
                `mappend` bookkeepShutdownReasonR set_shut_r
                `mappend` measuresR xm
-               `mappend` notifyNetworkDaemonR
+--               `mappend` notifyNetworkDaemonR
                `mappend` lifecycleR xm get_shut_r
                `mappend` updateInternalStateR
                `mappend` powerlinkR xm get_shut_r

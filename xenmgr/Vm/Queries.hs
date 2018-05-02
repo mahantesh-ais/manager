@@ -165,7 +165,7 @@ import System.Posix.Files (fileSize, getFileStatus)
 import Tools.XenStore
 
 import XenMgr.Rpc
-import XenMgr.Connect.NetworkDaemon
+--import XenMgr.Connect.NetworkDaemon
 import XenMgr.Config
 import XenMgr.Errors
 import XenMgr.Host
@@ -386,16 +386,21 @@ getVmNicBackendUuid nic =
                  _        -> return Nothing
      where
        -- default network backend uuid (if not overriden by nic config) comes from network daemon query
-       defaultNetUuid = from =<< getNetworkBackend' (nicdefNetwork nic) where
-         from (Just vm) = return (Just vm)
-         from Nothing   = getDefaultNetworkBackendVm
+       -- defaultNetUuid = from =<< getNetworkBackend' (nicdefNetwork nic) where
+       --   from (Just vm) = return (Just vm)
+       --   from Nothing   = getDefaultNetworkBackendVm
+         defaultNetUuid = getDefaultNetworkBackendVm
+
+statNetwork :: Network -> Rpc (Maybe NetworkInfo)
+statNetwork n
+    = return Nothing
 
 getAvailableVmNetworks :: [NicDef] -> Rpc [NetworkInfo]
 getAvailableVmNetworks [] = return []
 getAvailableVmNetworks nics
-    = do all_networks <- listNetworks
-         let nic_networks = map nicdefNetwork (filter nicdefEnable nics)
-         catMaybes <$> (mapM statNetwork $ intersect all_networks nic_networks)
+    = do --all_networks <- listNetworks
+           let nic_networks = map nicdefNetwork (filter nicdefEnable nics)
+           catMaybes <$> (mapM statNetwork $ nic_networks)
 
 getDependencyGraph :: Rpc (DepGraph Uuid)
 getDependencyGraph =
