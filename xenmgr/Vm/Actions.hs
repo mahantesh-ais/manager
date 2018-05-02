@@ -182,7 +182,7 @@ import XenMgr.Rpc
 import qualified XenMgr.Connect.Xl as Xl
 import qualified XenMgr.Connect.GuestRpcAgent as RpcAgent
 import XenMgr.Connect.Xl ( resumeFromSleep, resumeFromFile, suspendToFile )
-import XenMgr.Connect.NetworkDaemon
+--import XenMgr.Connect.NetworkDaemon
 import XenMgr.Connect.InputDaemon
 import XenMgr.Config
 import XenMgr.Errors
@@ -1640,7 +1640,7 @@ changeVmNicNetwork uuid nicid network = do
           info $ "====In ChangeVmNicNetwork====="
           liftIO $ Xl.connectVif uuid nicid False
           liftIO $ Xl.changeNicNetwork uuid nicid network
-          whenDomainID_ uuid $ \domid -> joinNetwork network domid nicid
+          -- whenDomainID_ uuid $ \domid -> joinNetwork network domid nicid
 -- Property accessors
 ---------------------
 setVmWiredNetwork :: Uuid -> Network -> XM ()

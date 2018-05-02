@@ -38,6 +38,7 @@ import Control.Concurrent.MVar
 import Control.Monad
 import Control.Monad.Trans
 import Data.List
+import Data.String
 import Data.IORef
 import System.IO
 
@@ -54,7 +55,7 @@ import Vm.ConfigWriter
 import Vm.Utility
 import qualified XenMgr.Connect.Xl as Xl
 import qualified XenMgr.Connect.GuestRpcAgent as RpcAgent
-import qualified XenMgr.Connect.NetworkDaemon as ND
+--import qualified XenMgr.Connect.NetworkDaemon as ND
 import XenMgr.Rpc
 import XenMgr.Errors
 
@@ -137,9 +138,13 @@ newVmMonitor uuid =
 submitVmEvent :: VmMonitor -> VmEvent -> Rpc ()
 submitVmEvent m e = liftIO $ (vmm_submit m) e
 
+-- "/ndvm/000000000_0000_0000_00000001"
+netbackToUuid :: String -> Uuid
+netbackToUuid backend = fromString $ replace "_" "-" $ last $ split '/' backend
+
 insertDefaultEvents :: VmMonitor -> Rpc ()
 insertDefaultEvents m = let uuid = vmm_uuid m in do
-    isNdvm <- readConfigPropertyDef uuid vmType ""
+    --isNdvm <- readConfigPropertyDef uuid vmType ""
     Xl.onNotify uuid "rtc" whenRtc
     Xl.onNotify uuid "vm" whenVm
     Xl.onNotify uuid "power-state" whenPowerState
@@ -149,9 +154,10 @@ insertDefaultEvents m = let uuid = vmm_uuid m in do
     -- xenstore watches installed on domain creation/shutdown
     watches <- liftIO . sequence $ watchesForVm (vmm_submit m)
     insertWatchEvents m watches
-    case isNdvm of
-        "ndvm" -> ND.onNetworkStateChanged whenNetState
-        _      -> return ()
+    --case isNdvm of
+    --   "ndvm" -> ND.onNetworkStateChanged whenNetState
+    --    _      -> return ()
+    return()
 
   where
     submit e = liftIO (vmm_submit m e)
@@ -171,14 +177,14 @@ insertDefaultEvents m = let uuid = vmm_uuid m in do
 
     whenNetState state backend = 
         case state of
-            30  -> manageFrontVifs False (ND.netbackToUuid backend) --Network backend disconnected, handle it...
-            100 -> manageFrontVifs True (ND.netbackToUuid backend)
+            30  -> manageFrontVifs False (netbackToUuid backend) --Network backend disconnected, handle it...
+            100 -> manageFrontVifs True (netbackToUuid backend)
             _  -> return ()
 
 --Chain some calls to eventually invoke removeMatch
 removeDefaultEvents :: Uuid -> Rpc ()
 removeDefaultEvents uuid = do
-    isNdvm <- readConfigPropertyDef uuid vmType ""
+    --isNdvm <- readConfigPropertyDef uuid vmType ""
     Xl.onNotifyRemove uuid "rtc" whenRtc
     Xl.onNotifyRemove uuid "vm" whenVm
     Xl.onNotifyRemove uuid "power-state" whenPowerState
@@ -186,9 +192,10 @@ removeDefaultEvents uuid = do
     --Need to undo the onAgent stuff to remove match rules
     RpcAgent.onAgentStartedRemove uuid (submit VmRpcAgentStart)
     RpcAgent.onAgentUninstalledRemove uuid (submit VmRpcAgentStop)
-    case isNdvm of
-        "ndvm" -> ND.onNetworkStateChangedRemove whenNetState
-        _      -> return ()
+    --case isNdvm of
+    --    "ndvm" -> ND.onNetworkStateChangedRemove whenNetState
+    --    _      -> return ()
+    return ()
 
   where     --do nothing here on these handlers
     submit _ = return ()

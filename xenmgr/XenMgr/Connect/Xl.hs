@@ -80,7 +80,7 @@ import System.IO
 import XenMgr.Rpc
 import XenMgr.Db
 import XenMgr.Errors
-import XenMgr.Connect.NetworkDaemon
+--import XenMgr.Connect.NetworkDaemon
 import qualified Data.Map as M
 import Text.Printf
 import System.Posix.Signals

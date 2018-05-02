@@ -92,16 +92,17 @@ listNetworks
 -- if not true, waits a bit before retrying and failing
 statNetwork :: Network -> Rpc (Maybe NetworkInfo)
 statNetwork n
-    = stat =<< repeatUntil ready 1 30 where
-      stat False = failTimeoutWaitingForNetworkDaemon
-      stat True  =
-        (rpcRetryOnError 10 250 retryCheck $ (Just <$> statNetwork' n)) `catchError` onErr
-      onErr ex = warn ("cannot stat " ++ show n ++ ": " ++ show ex) >> return Nothing
-      retryCheck e = case toRemoteErr e of
-                       Nothing -> False
-                       Just (RemoteErr name _) -> name == fromString "org.freedesktop.DBus.Error.UnknownObject"
+    = return Nothing
+    --stat =<< repeatUntil ready 1 30 where
+    --  stat False = failTimeoutWaitingForNetworkDaemon
+    --  stat True  =
+    --    (rpcRetryOnError 10 250 retryCheck $ (Just <$> statNetwork' n)) `catchError` onErr
+    --  onErr ex = warn ("cannot stat " ++ show n ++ ": " ++ show ex) >> return Nothing
+    --  retryCheck e = case toRemoteErr e of
+    --                   Nothing -> False
+    --                   Just (RemoteErr name _) -> name == fromString "org.freedesktop.DBus.Error.UnknownObject"
 
-statNetwork' :: Network -> Rpc NetworkInfo
+{-statNetwork' :: Network -> Rpc NetworkInfo
 statNetwork' n
     = NetworkInfo n
       <$> getNetworkName n
@@ -112,7 +113,7 @@ statNetwork' n
       <*> (getNetworkType n >>= \t -> return (t == eNETWORK_TYPE_INTERNAL))
       <*> isNetworkConfigured n
       <*> getNetworkCarrier n
-
+-}
 getNetworkName = comCitrixXenclientNetworkConfigGetName service . npathS
 getNetworkBridgeName = comCitrixXenclientNetworkConfigGetBridge service . npathS
 getNetworkBackend = comCitrixXenclientNetworkConfigGetBackendUuid service . npathS
