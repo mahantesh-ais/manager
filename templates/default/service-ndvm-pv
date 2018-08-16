@@ -77,5 +77,6 @@
       }
     },
     "qemu-dm-path": ""
-  }
+  },
+  "run-on-state-change": "\/etc\/xen\/scripts\/network"
 }
