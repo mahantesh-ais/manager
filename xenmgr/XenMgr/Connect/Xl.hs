@@ -369,6 +369,7 @@ setMemTarget uuid mbs = do
 removeNic :: Uuid -> NicID -> DomainID -> IO ()
 removeNic uuid nic back_domid = do
     domid <- getDomainId uuid
+    info $ "Removing nic " ++ show nic ++ " from domain " ++ domid
     system ("xl network-detach " ++ domid ++ " " ++ show nic)
     return ()
 
@@ -376,10 +377,10 @@ addNic :: Uuid -> NicID -> String -> DomainID -> IO ()
 addNic uuid nic net back_domid = do
     domid <- getDomainId uuid
     stubdomid <- (liftIO $ xsRead ("/xenmgr/vms/" ++ show uuid ++ "/stubdomid"))
+    info $ "Attaching nic " ++ show nic ++ " for domain " ++ domid
     let typ = isJust stubdomid
-    let wireless = L.isInfixOf "wifi" net
     (ec,stdout,_)<- readProcessWithExitCode "xl" ["network-attach", domid, printf "bridge=%s" net, printf "backend=%s" (show back_domid),
-            if typ then "type=ioemu" else "type=vif", if wireless then "wireless=1" else "wireless=0", printf "devid=%s" (show nic)] []
+            if typ then "type=ioemu" else "type=vif", printf "devid=%s" (show nic)] []
     return ()
 
 --Given the uuid of a domain and a nic id, set the target backend domid for that nic
