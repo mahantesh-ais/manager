@@ -82,6 +82,7 @@ module Vm.Config (
                 , vmNestedHvm
                 , vmSerial
                 , vmBios
+		, vmHdType
                 ) where
 
 import Control.Arrow
@@ -465,6 +466,7 @@ vmSerial = property "config.serial"
 vmStubdomMemory = property "config.stubdom-memory"
 vmStubdomCmdline = property "config.stubdom-cmdline"
 vmBios = property "config.bios"
+vmHdType = property "config.hdtype"
 
 -- Composite ones and lists
 vmExtraHvms    = property "config.extra-hvm"
@@ -814,7 +816,7 @@ miscSpecs cfg = do
             True  -> do exists <- doesFileExist "/sys/firmware/acpi/tables/SLIC"
                         if exists then return [ "acpi_firmware='/sys/firmware/acpi/tables/SLIC'" ] else do info $ "SLIC table missing"
                                                                                                            return []
-            
+
       -- Activate sound
       sound = maybeToList . fmap (("soundhw='"++) <$> (++"'")) <$> readConfigProperty uuid vmSound
 
@@ -863,6 +865,7 @@ miscSpecs cfg = do
           , ("iomem"           , vmPassthroughMmio) --ranges at a finer granularity. Few ways to implement, likely as a db-node with
           , ("ioports"         , vmPassthroughIo)   --each range as an entry beneath it, which is read and parsed during xl cfg generation.
           , ("bios"            , vmBios)
+          , ("hdtype"          , vmHdType)
           ]                                         --Remove this comment block when implemented.
 
       -- xl config handles certain options different than others (eg. quotes, brackets)
