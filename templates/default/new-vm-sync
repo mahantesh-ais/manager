@@ -32,6 +32,7 @@
         "network": "/any/0"
       }
     },
+    "hdtype": "ide",
     "disk": {
       "0": {
         "path": "\/storage\/syncvm\/syncvm.vhd",

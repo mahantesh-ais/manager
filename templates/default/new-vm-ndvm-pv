@@ -45,6 +45,7 @@
     "cmdline": "root=\/dev\/xvda2 iommu=soft console=hvc0",
     "kernel-extract": "0,1:\/bzImage",
     "flask-label": "system_u:system_r:ndvm_t",
+    "hdtype": "ide",
     "disk": {
       "0": {
         "path": "\/storage\/ndvm\/ndvm.vhd",

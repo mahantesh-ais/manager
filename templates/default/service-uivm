@@ -75,6 +75,7 @@
     "cmdline": "root=\/dev\/xvda1 xencons=hvc0",
     "kernel-extract": "\/boot\/bzImage",
     "flask-label": "system_u:system_r:uivm_t",
+    "hdtype": "ide",
     "disk": {
       "0": {
         "path": "\/storage\/uivm\/uivm.vhd",
