@@ -125,7 +125,6 @@ module Vm.Queries
                , getVmNestedHvm
                , getVmSerial
                , getVmBios
-               , getVmHdType
                ) where
 
 import Data.String
@@ -1052,4 +1051,3 @@ getVmTimerMode uuid = readConfigPropertyDef uuid vmTimerMode vmTimerModeDefault
 getVmNestedHvm uuid = readConfigPropertyDef uuid vmNestedHvm False
 getVmSerial uuid = readConfigPropertyDef uuid vmSerial ""
 getVmBios uuid = readConfigPropertyDef uuid vmBios "seabios"
-getVmHdType uuid = readConfigPropertyDef uuid vmHdType ""
